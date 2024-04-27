@@ -1,0 +1,20 @@
+[package]
+name = "ybx-common"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sha2-const-stable = "0.1.0"
+solana-sdk = "1.18.4"
+
+[dev-dependencies]
+criterion = "0.5.1"
+curve25519-dalek = "4.1.2"
+rand = "0.8.5"
+
+
+[[bench]]
+name = "on_curve_cmp"
+harness = false
