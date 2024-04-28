@@ -8,6 +8,7 @@ authors = [
     "Magnetar Fields <0xMAGNETAR@proton.me>",
 ]
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/cavemanloverboy/const-crypto"
 
 [dependencies]
 sha2-const-stable = "0.1.0"
