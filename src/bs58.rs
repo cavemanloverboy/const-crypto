@@ -90,7 +90,7 @@ const fn decode_pubkey_internal(input: &[u8]) -> Result<[u8; 32], &'static str> 
     Ok(rev_output)
 }
 
-#[repr(C, align(4))]
+#[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Base58Str {
     bytes: [u8; 44],
