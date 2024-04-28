@@ -86,6 +86,61 @@ pub const fn derive_program_address(seeds: &[&[u8]], program: &[u8; 32]) -> ([u8
     }
 }
 
+#[derive(Clone)]
+pub struct PartialPda {
+    inner: Sha256,
+}
+
+impl PartialPda {
+    pub const fn from_partial_preimage(partial_preimage: &[&[u8]]) -> PartialPda {
+        let mut inner = Sha256::new();
+        let mut i = 0;
+
+        while i != partial_preimage.len() {
+            inner = inner.update(partial_preimage[i]);
+            i += 1
+        }
+
+        PartialPda { inner }
+    }
+
+    pub const fn finalize_with(
+        self,
+        remaining_seeds: &[&[u8]],
+        program: &[u8; 32],
+    ) -> ([u8; 32], u8) {
+        let mut bump = u8::MAX;
+
+        loop {
+            // Initialize with partial preimage
+            let mut hasher = Sha256::new();
+            unsafe {
+                core::ptr::copy_nonoverlapping(&self.inner, &hasher as *const _ as *mut _, 1);
+            }
+
+            let mut i = 0;
+            while i < remaining_seeds.len() {
+                hasher = hasher.update(remaining_seeds[i]);
+                i += 1;
+            }
+            hasher = hasher.update(&[bump]);
+
+            // Solana PDAs also have program id and marker
+            hasher = hasher.update(program);
+            hasher = hasher.update(PDA_MARKER);
+
+            let candidate = hasher.finalize();
+
+            // If off curve, we're done
+            if !crypto_unsafe_is_on_curve(&candidate) {
+                return (candidate, bump);
+            }
+
+            // Otherwise, check next bump
+            bump -= 1;
+        }
+    }
+}
 #[rustfmt::skip] // keep alignment of explanatory comments
 pub(super) const fn decompress_step_1(
     repr: &[u8; 32],
@@ -112,5 +167,21 @@ fn test_on_curve() {
     for _ in 0..50_000 {
         let bytes = rand::random::<[u8; 32]>();
         assert_eq!(crypto_unsafe_is_on_curve(&bytes), safe_is_on_curve(&bytes));
+    }
+}
+
+#[test]
+fn test_with_partial_preimage() {
+    for _ in 0..50_000 {
+        let first = rand::random::<[u8; 32]>();
+        let second = rand::random::<[u8; 32]>();
+
+        let program = [0; 32];
+
+        let direct = derive_program_address(&[&first, &second], &program);
+        let via_parial =
+            PartialPda::from_partial_preimage(&[&first]).finalize_with(&[&second], &program);
+
+        assert_eq!(direct, via_parial)
     }
 }
