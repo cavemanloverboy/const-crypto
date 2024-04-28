@@ -1,11 +1,11 @@
 pub const fn try_from_str(input: &str) -> Result<[u8; 32], &'static str> {
-    match decode_pubkey(input.as_bytes()) {
+    match decode_pubkey_internal(input.as_bytes()) {
         Ok(bytes) => Ok(bytes),
         Err(e) => Err(e),
     }
 }
 
-pub const fn from_str(input: &str) -> [u8; 32] {
+pub const fn decode_pubkey(input: &str) -> [u8; 32] {
     match try_from_str(input) {
         Ok(pubkey) => pubkey,
         Err(_) => {
@@ -33,7 +33,7 @@ const fn new(base: &[u8; 58]) -> ([u8; 58], [u8; 128]) {
 ///
 /// TODO: still need to handle oob w/o panic but like cmon just provide
 /// a valid pubkey str
-const fn decode_pubkey(input: &[u8]) -> Result<[u8; 32], &'static str> {
+const fn decode_pubkey_internal(input: &[u8]) -> Result<[u8; 32], &'static str> {
     let mut output = [0; 32];
 
     const ENCODE_DECODE: ([u8; 58], [u8; 128]) = new(&SOLANA_ALPHABET);
@@ -245,7 +245,7 @@ pub const ENC_TABLE_32: [[u64; 9 - 1]; 8] = [
 fn test_null_case_round_trip() {
     let bytes = [0; 32];
     let encoded = bs58::encode(bytes).into_string();
-    assert_eq!(from_str(&encoded), bytes);
+    assert_eq!(decode_pubkey(&encoded), bytes);
 }
 
 #[test]
@@ -258,7 +258,7 @@ fn test_many_random() {
         let encoded = bs58::encode(bytes).into_string();
 
         // Check our decoded impl matches original bytes
-        assert_eq!(from_str(&encoded), bytes);
+        assert_eq!(decode_pubkey(&encoded), bytes);
     }
 }
 

@@ -1,7 +1,12 @@
 use const_crypto::{bs58, ed25519, sha2, sha3};
 
-/// Uses const bs58
-pub const PROGRAM_KEY: [u8; 32] = bs58::from_str("11111111111111111111111111111111");
+/// Uses const bs58 to roundtrip (decode + encode) system_program ID
+pub const PROGRAM_KEY: [u8; 32] = bs58::decode_pubkey("11111111111111111111111111111111");
+pub const PROGRAM_KEY_STR: &'static str = bs58::encode_pubkey(&PROGRAM_KEY).str();
+const _: () = assert!(ascii_str_eq(
+    PROGRAM_KEY_STR,
+    "11111111111111111111111111111111"
+));
 
 /// Uses const ed25519 (and thus const sha2 internally)
 pub const PROGRAM_DERIVED_ADDRESS: [u8; 32] =
@@ -21,4 +26,17 @@ pub fn main() {
     println!("keccak   = {KECCAK_DEMO:?}\n");
     println!("sha3_256 = {SHA3_256_DEMO:?}\n");
     println!("sha256   = {SHA256_DEMO:?}\n");
+}
+
+pub const fn ascii_str_eq(a: &str, b: &str) -> bool {
+    assert!(a.len() == b.len());
+    assert!(a.is_ascii());
+    assert!(b.is_ascii());
+
+    let mut i = 0;
+    while i < a.len() {
+        assert!(a.as_bytes()[i] == b.as_bytes()[i]);
+        i += 1
+    }
+    true
 }
