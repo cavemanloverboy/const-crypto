@@ -76,28 +76,6 @@ const fn decode_pubkey(input: &[u8]) -> Result<[u8; 32], &'static str> {
         i += 1;
     }
 
-    // let mut idx = 0;
-    // let mut c = input[idx];
-    // while c == ZERO {
-    //     c = input[idx];
-    //     idx += 1;
-
-    //     output[index] = 0;
-    //     index += 1;
-    // }
-
-    // let mut idx = 0;
-    // let mut c = input[idx];
-    // while c == ZERO && idx < input.len() {
-    //     idx += 1;
-    //     if idx < input.len() {
-    //         c = input[idx];
-    //     }
-
-    //     output[index] = 0;
-    //     index += 1;
-    // }
-
     let mut idx = 0;
     while idx < input.len() && input[idx] == ZERO {
         output[index] = 0;
