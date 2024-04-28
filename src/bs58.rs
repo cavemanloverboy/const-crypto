@@ -123,7 +123,7 @@ pub const fn encode_pubkey(input: &[u8; 32]) -> Base58Str {
         // Cast a reference to bytes as a reference to u32
         core::slice::from_raw_parts(
             input.as_ptr() as *const u32,
-            input.len() / std::mem::size_of::<u32>(),
+            input.len() / core::mem::size_of::<u32>(),
         )
     };
 
