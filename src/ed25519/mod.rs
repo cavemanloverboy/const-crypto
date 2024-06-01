@@ -113,10 +113,7 @@ impl PartialPda {
 
         loop {
             // Initialize with partial preimage
-            let mut hasher = Sha256::new();
-            unsafe {
-                core::ptr::copy_nonoverlapping(&self.inner, &hasher as *const _ as *mut _, 1);
-            }
+            let mut hasher: Sha256 = unsafe { core::mem::transmute_copy(&self.inner) };
 
             let mut i = 0;
             while i < remaining_seeds.len() {
