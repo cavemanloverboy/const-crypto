@@ -1,6 +1,6 @@
 [package]
 name = "const-crypto"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "A `#[no_std]` library for `const` sha2/sha3 hashing, ed25519 off-curve point evaluation, and bs58 decoding/encoding with minimal dependencies."
 authors = [
