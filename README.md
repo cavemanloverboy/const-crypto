@@ -1,6 +1,6 @@
 # `const-crypto`
 
-A `#[no_std]` library for `const` sha2/sha3 hashing, ed25519 off-curve point evaluation, and bs58 decoding/encoding with minimal dependencies.
+A `#[no_std]` library for `const` sha2/sha3 hashing, ed25519 off-curve point evaluation, and bs58 decoding/encoding with minimal dependencies. Note: This crate uses the `const_intrinsic_copy` feature which isn't stable yet, meaning rust nightly is required.
 
 ## Features
 

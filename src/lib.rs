@@ -1,4 +1,5 @@
 #![no_std]
+#![feature(const_intrinsic_copy)]
 #[doc = include_str!("../README.md")]
 pub mod bs58;
 pub mod ed25519;
