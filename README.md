@@ -6,7 +6,7 @@ A `#[no_std]` library for `const` sha2/sha3 hashing, ed25519 off-curve point eva
 
 - We write a `const` implementation of Edwards point decompression and use it to provide a `const` implementation of on/off curve evaluation. This is then used to build a `const` implementation of Solana's `Pubkey::find_program_address`.
     **NOTE: this point decompression implementation is not cryptographically safe; it does not use constant time implementations for the internal math operations, as it is not intended to be used with secrets. Do not reuse.**
-- Base58 encoding of 32 byte arrays into strings (and vice versa, i.e. decoding). The encoding is taken from `fd_bs58`, and adapted for `const`/`#[no_std] with some bug fixes.
+- Base58 encoding of 32 byte arrays into strings (and vice versa, i.e. decoding). The encoding is taken from `fd_bs58`, and adapted for `const`/`#[no_std]` with some bug fixes.
 - Full sha2/sha3 hash suites. Re-exports of `sha2-const-stable` (authored by yours truly) and `keccak-const` (authored by [OffChainLabs](https://github.com/OffchainLabs/keccak-const))
 
 ## Usage
